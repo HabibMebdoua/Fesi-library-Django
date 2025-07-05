@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Books filter</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Book Filter -->
+        <form method="get" class="border p-4 ">     
+          <div class="">
+          {% bootstrap_form filter.form %}
+          <div class="button d-flex align-content-center">
+            <button class="btn btn-dark w-100 mt-3">filter</button>
+          </div> 
+        </div>   
+      </form>
+        </div>
+        <div class="modal-footer">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row d-flex justify-content-between">
+    <div class="col-lg-10">
+      <h1>List of Loaned books</h1>
+      <hr>
+    </div>
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-dark mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="fa-solid fa-magnifying-glass"></i>  Books Filter
+      </button>
+    </div>
+  </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="list">
+                <table class="table table-hover text-center">
+                    <thead class="">
+                        <tr>
+                            <th class="table-dark">Book code</th>
+                            <th class="table-dark">Student's Full Name</th>
+                            <th class="table-dark">Student code</th>
+                            <th class="table-dark">Loan date</th>
+                            <th class="table-dark">Loan expiry date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td>{{book.copy.code}}</td>
+                            <td>{{book.student.first_name}} {{book.student.family_name}}</td>
+                            <td>{{book.student.code}}</td>
+                            <td>{{book.from_date}}</td>
+                            <td>{{book.to_date}}</td>
+                            <td><a href="{% url 'lend_details' book.id %}" class="btn btn-success">See details</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                          <td>There is no data</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

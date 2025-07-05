@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1> <i class="fa-solid fa-graduation-cap"></i> Add new student</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center mb-5">
+        <div class="col-lg-6">
+            <form action="" method="post" >
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-success w-100"><i class="fa-solid fa-plus"></i> Add student </button>
+            </form>
+        </div>
+        <div class="col-lg-6">
+            <img src="{% static 'img/add_student.svg' %}" alt="">
+        </div>
+    </div>
+</div>
+{% endblock %}

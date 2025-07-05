@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fsei Library - Djelfa</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    .sidebar {
+      min-height: 100vh;
+      background-color: #343a40;
+      color: white;
+      padding-top: 50px;  /* Space for the toggle button */
+      transition: margin-left 0.3s ease;
+      position: relative; /* Keep sidebar in a relative position */
+    }
+
+    /* Sidebar is always visible for authenticated users */
+    .sidebar {
+      margin-left: 0;  /* Ensure sidebar is fully expanded */
+    }
+
+    .sidebar .list-group-item {
+      background-color: transparent;
+      border: none;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .sidebar .list-group-item.active {
+      background-color: #212529;
+      border-color: #212529;
+      color: #fff;
+    }
+
+    .sidebar a.nav-link {
+      color: white;
+      display: block;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar a.nav-link:hover {
+      background-color: #495057; /* Light grey background on hover */
+      text-decoration: none;
+    }
+
+
+    .content-transition {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  {% include '_partials/navbar.html' %}
+
+  <div class="container-fluid">
+    <div class="row">
+
+      {% if request.user.is_authenticated %}
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-2 sidebar bg-dark text-white">
+          <div class="p-2">
+            <!-- Books Management -->
+            <ul class="list-group mb-3">
+              <li class="list-group-item active bg-light text-dark text-center">Books Management</li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'add_book' %}"><i class="fa-solid fa-plus me-2"></i> Add new book</a></li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'books' %}"><i class="fa-solid fa-plus me-2"></i> Books</a></li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'copies' %}"><i class="fa-solid fa-plus me-2"></i> Copies</a></li>
+            </ul>
+
+  
+
+            <!-- Students Management -->
+            <ul class="list-group mb-3">
+              <li class="list-group-item active bg-light text-dark text-center">Students Management</li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'add_student' %}"><i class="fa-solid fa-plus me-2"></i> Add new student</a></li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'all_students' %}"><i class="fa-solid fa-graduation-cap me-2"></i> Registered students</a></li>
+            </ul>
+
+            <!-- Loan Management -->
+            <ul class="list-group">
+              <li class="list-group-item active bg-light text-dark text-center">Loan Management</li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'lend_book' %}"><i class="fa-solid fa-book-open-reader me-2"></i> Lend a book</a></li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'loaned_books' %}"><i class="fa-solid fa-briefcase me-2"></i> Loaned books</a></li>
+              <li class="list-group-item"><a class="nav-link" href="{% url 'lost_books' %}"><i class="fa-solid fa-circle-xmark me-2"></i> Lost books</a></li>
+            </ul>
+          </div>
+        </nav>
+      {% endif %}
+
+      <!-- Main Content -->
+      <main id="mainContent" class="{% if request.user.is_authenticated %}col-md-10{% else %}col-12{% endif %} ms-sm-auto px-4 py-4 content-transition">
+
+        <!-- Flash Messages -->
+        <div class="container">
+          <div class="row d-flex justify-content-center mt-3">
+            {% if messages %}
+              {% for msg in messages %}
+                <div class="alert alert-{{ msg.tags }} alert-dismissible fade show" role="alert">
+                  <strong>{{ msg.tags|capfirst }}</strong> {{ msg }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Page-Specific Content -->
+        <div class="container">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  {% include '_partials/footer.html' %}
+
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

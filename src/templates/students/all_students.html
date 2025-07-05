@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Modal -->
+  <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Students filter</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Book Filter -->
+        <form method="get" class="border p-4 ">     
+          <div class="">
+          {% bootstrap_form filter.form %}
+          <div class="button d-flex align-content-center">
+            <button class="btn btn-dark w-100 mt-3">filter</button>
+          </div> 
+        </div>   
+      </form>
+        </div>
+        <div class="modal-footer">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" >Alert</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Are you sure want to delete all students?</h6>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <a class="btn btn-success" href="{% url 'delete_all_students' %}">Save changes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Delete Modal -->
+
+  {% for student in students %}
+  <!-- Edit student Form -->
+  <div class="modal fade" id="edit-modal-{{ student.id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ book.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Edit Student - {{ student.first_name }} {{ student.family_name }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Form to Edit the student -->
+          <form method="post" action="{% url 'edit_student' student.id %}">
+            {% csrf_token %}
+            
+            <!-- Frist name Field -->
+            <div class="mb-3">
+              <label class="form-label">First name</label>
+              <input type="text" class="form-control" name="first_name" value="{{ student.first_name }}">
+            </div>
+  
+            <!-- Family name Field -->
+            <div class="mb-3">
+              <label class="form-label">Family name</label>
+              <input type="text" class="form-control" name="family_name" value="{{ student.family_name }}">
+            </div>
+  
+            <!-- Bransh Field - Static Dropdown with pre-selected value -->
+            <div class="mb-3">
+              <label class="form-label">Branch</label>
+              <select name="branch" class="form-control m-2">
+                <option value="Computer Science" {% if student.branch == 'Computer Science' %}selected{% endif %}>Computer Science</option>
+                <option value="physics" {% if student.branch == 'physics' %}selected{% endif %}>Physics</option>
+                <option value="Material science" {% if student.branch == 'Material science' %}selected{% endif %}>Material Science</option>
+                <option value="chemistry" {% if student.branch == 'chemistry' %}selected{% endif %}>Chemistry</option>
+                <option value="mathematics" {% if student.branch == 'mathematics' %}selected{% endif %}>Mathematics</option>
+              </select>
+            </div>
+  
+            <!-- Code Field -->
+            <div class="mb-3">
+              <label class="form-label">Code</label>
+              <input type="number" class="form-control" name="code" value="{{ student.code }}">
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+    <div class="row d-flex justify-content-between">
+      <div class="col-lg-10">
+        <h1>List of students</h1>
+        <hr>
+      </div>
+      <div class="col-lg-2">
+        <button type="button" class="btn btn-dark mb-5" data-bs-toggle="modal" data-bs-target="#filter-modal">
+          <i class="fa-solid fa-magnifying-glass"></i>  Students Filter
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="list">
+                <table class="table table-hover text-center">
+                    <thead class="">
+                        <tr>
+                            <th class="table-dark">Full Name</th>
+                            <th class="table-dark">Code</th>
+                            <th class="table-dark">Branch</th>
+                            <th class="table-dark">Registration date</th>
+                            {% if students.count > 0 %}
+                            <th class="table-dark p-2">
+                              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                                Delete all
+                              </button>
+                            </th>
+                            {% endif %}
+                        </tr> 
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{student.first_name}}  {{student.family_name}}</td>
+                                <td>{{student.code}}</td>
+                                <td>{{student.branch}}</td>
+                                <td>{{student.date}}</td>
+                                <td>
+                                  <!-- Open Edit modal -->  
+                                  <a href="" class="btn btn-dark"  data-bs-toggle="modal" data-bs-target="#edit-modal-{{ student.id }}"><i class="fa-solid fa-pen"></i> </a>
+                                  <a href="{% url 'delete_student' student.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i> </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                              <td>There is no data</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Lend Details</h1>
+            <hr>
+            <div class="info p-5 m-5 border">
+                <h6>Book code :  <span class="fw-bold">{{lend.copy.code}}</span></h6>
+                <h6>Book title : <span class="fw-bold">{{lend.copy.book.title}}</span></h6>
+                <h6>Student full name : <span class="fw-bold">{{lend.student.first_name}}  {{lend.student.family_name}}</span></h6>
+                <h6>Student code : <span class="fw-bold">{{lend.student.code}}</span></h6>
+                <a href="{% url 'end_lend' lend.id %}" class="btn btn-success btn-lg w-100 mt-4">End of loan  <i class="fa-solid fa-check"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img src="{% static 'img/end_loan.svg' %}" alt="">
+        </div>
+    </div>
+</div>
+{% endblock %}

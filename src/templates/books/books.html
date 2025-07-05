@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container">
+  <!--Filter Modal -->
+  <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Books filter</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Book Filter -->
+        <form method="get" class="border p-4 ">     
+          <div class="">
+          {% bootstrap_form filter.form %}
+          <div class="button d-flex align-content-center">
+            <button class="btn btn-primary w-100 mt-3">filter</button>
+          </div> 
+        </div>   
+      </form>
+        </div>
+        <div class="modal-footer">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- End filter Modal -->
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Alert</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6>Are you sure want to delete all books?</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <a class="btn btn-success" href="{% url 'delete_all_books' %}">Save changes</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Delete Modal -->
+
+
+
+
+{% for book in books %}
+<!-- Edit Book Modal for each book -->
+<div class="modal fade" id="edit-modal-{{ book.id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ book.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Edit Book - {{ book.title }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form to Edit the Book -->
+        <form method="post" action="{% url 'edit_book' book.id %}">
+          {% csrf_token %}
+          
+          <!-- Title Field -->
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" value="{{ book.title }}">
+          </div>
+
+          <!-- Author Field -->
+          <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-control" name="author" value="{{ book.author }}">
+          </div>
+
+          <!-- Category Field - Static Dropdown with pre-selected value -->
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select name="catigory" class="form-control m-2">
+              <option value="Computer Science" {% if book.catigory == 'Computer Science' %}selected{% endif %}>Computer Science</option>
+              <option value="physics" {% if book.catigory == 'physics' %}selected{% endif %}>Physics</option>
+              <option value="Material science" {% if book.catigory == 'Material science' %}selected{% endif %}>Material Science</option>
+              <option value="chemistry" {% if book.catigory == 'chemistry' %}selected{% endif %}>Chemistry</option>
+              <option value="mathematics" {% if book.catigory == 'mathematics' %}selected{% endif %}>Mathematics</option>
+            </select>
+          </div>
+
+          <!-- Type Field - Static Dropdown with pre-selected value -->
+          <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select name="type" class="form-control m-2">
+              <option value="" {% if book.type == "" %}selected{% endif %}>Type</option>
+              <option value="Book" {% if book.type == 'Book' %}selected{% endif %}>Book</option>
+              <option value="Dictionary" {% if book.type == 'Dictionary' %}selected{% endif %}>Dictionary</option>
+            </select>
+          </div>
+
+          <!-- Copies Field -->
+          <div class="mb-3">
+            <label class="form-label">Copies</label>
+            <input type="number" class="form-control" name="copies" value="{{ book.copies }}">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+
+
+    <div class="row d-flex justify-content-between">
+      <div class="col-lg-10">
+        <h1>List of books</h1>
+        <hr>
+      </div>
+      <div class="col-lg-2">
+        <button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#filter-modal">
+          <i class="fa-solid fa-magnifying-glass"></i>  Books Filter
+        </button>
+      </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="list">
+                <table class="table table-hover text-center">
+                    <thead class="">
+                        <tr>
+                            <th class="table-dark">Title</th>
+                            <th class="table-dark">Author</th>
+                            <th class="table-dark">Catigory</th>
+                            <th class="table-dark">Type</th>
+                            <th class="table-dark">Copies</th>
+                            {% if books.count > 0 %}
+                            <th class="table-dark p-2">
+                              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                                Delete all
+                              </button>
+                            </th>
+                            {% endif %}
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td>{{book.title}}</td>
+                                <td>{{book.author}}</td>
+                                <td>{{book.catigory}}</td>
+                                <td>{{book.type}}</td>
+                                <td>{{book.copies}}</td>
+                                <td>
+                                    <a href="{% url 'add_copy' book.id %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i></a>
+                                    <!-- Open Edit modal -->
+                                    <a href="" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ book.id }}"><i class="fa-solid fa-pen"></i></a>
+                                    <a href="{% url 'delete_one_book' book.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                              <td>There is no data</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

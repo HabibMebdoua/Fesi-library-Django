@@ -1,0 +1,56 @@
+
+body{
+    font-family: 'Arima', cursive;
+    font-family: 'Comic Neue', cursive;
+    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    font-family: 'Oxygen', sans-serif;
+    font-family: 'Work Sans', sans-serif;
+}
+
+/* Main img */
+
+.main-img div img{
+    width: 1264px;
+}
+
+@media (max-width:767px) {
+    .main-img div img{
+        display: none;
+    }
+}
+
+.welcome{
+    background-color: rgb(249, 249, 249);
+}
+
+.popular-books-title{
+    background-color: rgb(249, 249, 249);
+}
+
+.special-heading{
+    font-size: 70px;
+    font-weight: 800;
+    color: #ebeced;
+}
+
+.special-margin{
+    margin-top: -40px;
+}
+
+
+/* Popular books */
+
+.book-card i{
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+
+/* Books Page */
+
+.form-info{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
